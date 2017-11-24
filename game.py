@@ -1,20 +1,17 @@
+import os
+
 import pygame
 import pygame.constants
-import os
 
 from ball import update_ball_position, handle_ball_collisions, draw_ball
 from constants import *
+import paddle
+from paddle import draw_paddle, move_paddle
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 left_down = False
 right_down = False
-
-paddle_width = 88
-paddle_height = 7
-paddle_left = (screen_width // 2) - (paddle_width // 2)
-paddle_top = screen_height - 50
-paddle_mvmt = 8
 
 brick_width = 50
 brick_height = 30
@@ -44,10 +41,6 @@ def draw_brick_rows():
         draw_brick_row((brick_height + 1) * i)
 
 
-def draw_paddle():
-    pygame.draw.rect(screen, cyan, (paddle_left, paddle_top, paddle_width, paddle_height))
-
-
 # main loop
 while not gameover:
     # Handle key presses
@@ -66,22 +59,14 @@ while not gameover:
                 right_down = False
 
     # Move paddle if needed
-    movement_left = min(paddle_mvmt, paddle_left - offset)
-    paddle_right = paddle_left + paddle_width
-    right_wall = screen_width - offset
-    movement_right = min(paddle_mvmt, right_wall - paddle_right)
-    if left_down:
-        paddle_left = paddle_left - movement_left
-    if right_down:
-        paddle_left = paddle_left + movement_right
-
+    paddle_left = move_paddle(offset, left_down, right_down)
     update_ball_position()
-    handle_ball_collisions(paddle_top)
+    handle_ball_collisions(paddle.top, paddle.left, paddle.left + paddle.width)
 
     # Drawing
-    screen.fill(white)
+    screen.blit(background,(0,0))
     draw_brick_rows()
-    draw_paddle()
+    draw_paddle(screen)
     draw_ball(screen)
 
     pygame.display.update()
