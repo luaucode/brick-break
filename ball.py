@@ -1,5 +1,6 @@
 import pygame
 from constants import *
+from constants import brick_width
 
 radius = 10
 color = gray
@@ -24,10 +25,20 @@ def has_ball_hit_paddle(paddle_top, paddle_left, paddle_right):
             return True
 
 
-def handle_ball_collisions(paddle_top, paddle_left, paddle_right):
+def handle_ball_paddle_collisions(paddle_top, paddle_left, paddle_right):
     if has_ball_hit_paddle(paddle_top, paddle_left, paddle_right):
         global mvmt
         mvmt = -mvmt
+
+
+def handle_ball_brick_collisions(bricks):
+    for b in bricks:
+        bx = b[1]
+        by = b[0]
+        if x > bx and x < bx + brick_width and y > by and y < by + brick_height:
+            bricks.remove(b)
+            global mvmt
+            mvmt = -mvmt
 
 
 def draw_ball(screen):

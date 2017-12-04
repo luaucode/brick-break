@@ -10,3 +10,5 @@ cyan = (175, 231, 231)
 laser_red = (255, 36, 36)
 
 background = pygame.image.load('images/background.jpg')
+brick_width = 50
+brick_height = 30
