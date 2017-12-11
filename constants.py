@@ -12,3 +12,7 @@ laser_red = (255, 36, 36)
 background = pygame.image.load('images/background.jpg')
 brick_width = 50
 brick_height = 30
+
+brick_count = screen_width // (brick_width + 1)
+gap = screen_width - brick_count * (brick_width + 1)
+offset = gap // 2

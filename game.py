@@ -3,10 +3,9 @@ import os
 import pygame.constants
 
 import paddle
-from ball import update_ball_position, handle_ball_paddle_collisions, draw_ball, handle_ball_brick_collisions
+from ball import *
 from constants import *
-from constants import brick_width, brick_height
-from paddle import draw_paddle, move_paddle
+from paddle import *
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -20,10 +19,6 @@ clock = pygame.time.Clock()
 gameover = False
 
 row_count = 5
-
-brick_count = screen_width // (brick_width + 1)
-gap = screen_width - brick_count * (brick_width + 1)
-offset = gap // 2
 
 bricks = []
 
@@ -60,7 +55,9 @@ while not gameover:
 
     # Move paddle if needed
     paddle_left = move_paddle(offset, left_down, right_down)
-    update_ball_position()
+    update_ball_y_position()
+    update_ball_x_position()
+    handle_ball_wall_collisions()
     handle_ball_paddle_collisions(paddle.top, paddle.left, paddle.left + paddle.width)
     handle_ball_brick_collisions(bricks)
 
@@ -71,5 +68,5 @@ while not gameover:
     draw_ball(screen)
 
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(90)
 pygame.quit()
