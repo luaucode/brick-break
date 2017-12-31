@@ -1,12 +1,28 @@
+from random import randint
+
 from constants import *
 from constants import brick_width
+import state
+
+
+def reset_ball():
+    global x
+    global y
+    x = screen_width // 2
+    y = int(screen_height / 2.5)
+    global mvmt_y
+    global mvmt_x
+    mvmt_x = randint(-2, 2)
+    mvmt_y = 4
+
 
 radius = 10
 color = gray
-x = screen_width // 2
-y = int(screen_height / 2.5)
-mvmt_y = 4
-mvmt_x = 2
+x = 0
+y = 0
+mvmt_y = 0
+mvmt_x = 0
+reset_ball()
 
 
 def is_x_between_these_two_numbers(x, left, right):
@@ -25,11 +41,15 @@ def has_ball_hit_paddle(paddle_top, paddle_left, paddle_right):
             return True
 
 
-def handle_ball_paddle_collisions(paddle_top, paddle_left, paddle_right):
+def handle_ball_paddle_collisions(paddle_top, paddle_left, paddle_right, left_down, right_down):
     if has_ball_hit_paddle(paddle_top, paddle_left, paddle_right):
+        global mvmt_x
         global mvmt_y
         mvmt_y = -mvmt_y
-
+        if left_down:
+            mvmt_x -= 1
+        if right_down:
+            mvmt_x += 1
 
 def handle_ball_brick_collisions(bricks):
     for b in bricks:
@@ -39,6 +59,7 @@ def handle_ball_brick_collisions(bricks):
             bricks.remove(b)
             global mvmt_y
             mvmt_y = -mvmt_y
+            state.score = state.score + 50
 
 
 def draw_ball(screen):
@@ -48,11 +69,15 @@ def draw_ball(screen):
 def update_ball_y_position():
     global y
     y = y + mvmt_y
+    if y > screen_height:
+        state.lives = state.lives - 1
+        reset_ball()
 
 
 def update_ball_x_position():
     global x
     x = x + mvmt_x
+
 
 def handle_ball_wall_collisions():
     right_wall = screen_width - offset

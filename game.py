@@ -6,6 +6,8 @@ import paddle
 from ball import *
 from constants import *
 from paddle import *
+from text import render_text
+import state
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -22,6 +24,7 @@ row_count = 5
 
 bricks = []
 
+
 def populate_bricks():
     for row in range(row_count):
         for i in range(brick_count):
@@ -35,9 +38,10 @@ def draw_bricks():
         y = b[0]
         pygame.draw.rect(screen, gray, (x, y, brick_width, brick_height))
 
+
 populate_bricks()
 # main loop
-while not gameover:
+while state.lives > 0:
     # Handle key presses
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -58,14 +62,16 @@ while not gameover:
     update_ball_y_position()
     update_ball_x_position()
     handle_ball_wall_collisions()
-    handle_ball_paddle_collisions(paddle.top, paddle.left, paddle.left + paddle.width)
+    handle_ball_paddle_collisions(paddle.top, paddle.left, paddle.left + paddle.width, left_down, right_down)
     handle_ball_brick_collisions(bricks)
 
     # Drawing
-    screen.blit(background,(0,0))
+    screen.blit(background, (0, 0))
     draw_bricks()
     draw_paddle(screen)
     draw_ball(screen)
+    render_text(screen, f'Score: {state.score}', score_pos)
+    render_text(screen, f'Lives: {state.lives}', lives_pos)
 
     pygame.display.update()
     clock.tick(90)
