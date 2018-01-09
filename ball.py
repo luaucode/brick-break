@@ -3,6 +3,7 @@ from random import randint
 from constants import *
 from constants import brick_width
 import state
+from sfx import fast_sfx
 
 
 def reset_ball():
@@ -43,6 +44,7 @@ def has_ball_hit_paddle(paddle_top, paddle_left, paddle_right):
 
 def handle_ball_paddle_collisions(paddle_top, paddle_left, paddle_right, left_down, right_down):
     if has_ball_hit_paddle(paddle_top, paddle_left, paddle_right):
+        fast_sfx("boing")
         global mvmt_x
         global mvmt_y
         mvmt_y = -mvmt_y
@@ -51,11 +53,13 @@ def handle_ball_paddle_collisions(paddle_top, paddle_left, paddle_right, left_do
         if right_down:
             mvmt_x += 1
 
+
 def handle_ball_brick_collisions(bricks):
     for b in bricks:
         bx = b[1]
         by = b[0]
         if x > bx and x < bx + brick_width and y > by and y < by + brick_height:
+            fast_sfx("pshh")
             bricks.remove(b)
             global mvmt_y
             mvmt_y = -mvmt_y

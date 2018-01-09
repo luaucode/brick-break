@@ -1,14 +1,20 @@
 import os
 
 import pygame.constants
-import time
 
 import paddle
-from ball import *
+import state
+from ball import (
+    update_ball_y_position,
+    update_ball_x_position,
+    handle_ball_wall_collisions,
+    handle_ball_paddle_collisions,
+    handle_ball_brick_collisions,
+    draw_ball)
 from constants import *
 from paddle import *
+from sfx import play_sfx
 from text import render_text
-import state
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -16,31 +22,17 @@ left_down = False
 right_down = False
 
 pygame.init()
-pygame.mixer.pre_init()
-pygame.mixer.init()
+
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Brick Break')
 clock = pygame.time.Clock()
 gameover = False
-sfx_channel = pygame.mixer.Channel(0)
-sfx_queue = []
 should_play_countdown = True
 
 
-def play_sfx(sfx, times=1):
-    effect = pygame.mixer.Sound(sfx)
-    for i in range(times):
-        sfx_queue.append(effect)
-    while sfx_queue:
-        while sfx_channel.get_busy():
-            time.sleep(0.1)
-        effect = sfx_queue.pop(0)
-        sfx_channel.play(effect)
-
-
 def play_countdown():
-    play_sfx('SFX/countdown1edit.ogg', 3)
-    play_sfx('SFX/countdown2edit.ogg')
+    play_sfx('countdown1edit', 3)
+    play_sfx('countdown2edit')
 
 
 row_count = 5
