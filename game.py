@@ -1,6 +1,7 @@
 import os
 
 import pygame.constants
+import time
 
 import paddle
 from ball import *
@@ -15,10 +16,32 @@ left_down = False
 right_down = False
 
 pygame.init()
+pygame.mixer.pre_init()
+pygame.mixer.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Brick Break')
 clock = pygame.time.Clock()
 gameover = False
+sfx_channel = pygame.mixer.Channel(0)
+sfx_queue = []
+should_play_countdown = True
+
+
+def play_sfx(sfx, times=1):
+    effect = pygame.mixer.Sound(sfx)
+    for i in range(times):
+        sfx_queue.append(effect)
+    while sfx_queue:
+        while sfx_channel.get_busy():
+            time.sleep(0.1)
+        effect = sfx_queue.pop(0)
+        sfx_channel.play(effect)
+
+
+def play_countdown():
+    play_sfx('SFX/countdown1edit.ogg', 3)
+    play_sfx('SFX/countdown2edit.ogg')
+
 
 row_count = 5
 
@@ -36,10 +59,11 @@ def draw_bricks():
     for b in bricks:
         x = b[1]
         y = b[0]
-        pygame.draw.rect(screen, gray, (x, y, brick_width, brick_height))
+        pygame.draw.rect(screen, white, (x, y, brick_width, brick_height))
 
 
 populate_bricks()
+
 # main loop
 while state.lives > 0:
     # Handle key presses
@@ -75,4 +99,10 @@ while state.lives > 0:
 
     pygame.display.update()
     clock.tick(90)
+
+    if should_play_countdown:
+        pygame.mixer.music.load("SFX/backgroundmusic.ogg")
+        pygame.mixer.music.play(-1)
+        play_countdown()
+        should_play_countdown = False
 pygame.quit()

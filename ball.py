@@ -63,7 +63,7 @@ def handle_ball_brick_collisions(bricks):
 
 
 def draw_ball(screen):
-    pygame.draw.circle(screen, laser_red, (x, y), radius)
+    pygame.draw.circle(screen, white, (x, y), radius)
 
 
 def update_ball_y_position():
