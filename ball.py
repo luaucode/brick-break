@@ -1,5 +1,5 @@
 from random import randint
-
+import paddle
 from constants import *
 from constants import brick_width
 import state
@@ -66,13 +66,29 @@ def handle_ball_brick_collisions(bricks):
             state.score = state.score + 50
 
 
+def calculate_dy(paddle_right, paddle_left, paddle_top):
+    b_p_distance = paddle_top - y + radius
+    if b_p_distance > mvmt_y:
+        return mvmt_y
+
+    if x > paddle_right or x < paddle_left:
+        return mvmt_y
+
+    if mvmt_y < 0:
+        return mvmt_y
+
+    return b_p_distance
+
+
 def draw_ball(screen):
     pygame.draw.circle(screen, white, (x, y), radius)
 
 
 def update_ball_y_position():
     global y
-    y = y + mvmt_y
+    paddle_right = paddle.left + paddle.width
+    dy = calculate_dy(paddle_right, paddle.left, paddle.top)
+    y = y + dy
     if y > screen_height:
         state.lives = state.lives - 1
         reset_ball()
