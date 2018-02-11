@@ -5,6 +5,9 @@ import pygame.constants
 import paddle
 import state
 from ball import (
+    x as ball_x,
+    y as ball_y,
+    radius as ball_radius,
     update_ball_y_position,
     update_ball_x_position,
     handle_ball_wall_collisions,
@@ -74,12 +77,15 @@ while state.lives > 0:
                 right_down = False
 
     # Move paddle if needed
-    paddle_left = move_paddle(offset, left_down, right_down)
     update_ball_y_position()
     update_ball_x_position()
     handle_ball_wall_collisions()
     handle_ball_paddle_collisions(paddle.top, paddle.left, paddle.left + paddle.width, left_down, right_down)
     handle_ball_brick_collisions(bricks)
+    paddle_left = move_paddle(offset, left_down, right_down,
+                              ball_x - ball_radius, ball_y - ball_radius,
+                              ball_x + ball_radius, ball_y + ball_radius)
+
 
     # Drawing
     screen.blit(background, (0, 0))
