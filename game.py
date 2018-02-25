@@ -1,4 +1,5 @@
 import os
+import random
 
 import pygame.constants
 
@@ -46,15 +47,33 @@ bricks = []
 def populate_bricks():
     for row in range(row_count):
         for i in range(brick_count):
-            pair = (row * (brick_height + 1), offset + i * (brick_width + 1))
-            bricks.append(pair)
+            nmbr = random.randint(1, 12)
+            color = white
+            effect = ''
+            if nmbr == 8:
+                color = lime_green
+                effect = 'pdl_grw'
+            elif nmbr == 9:
+                color = chill_blue
+                effect = 'pdl_shrnk'
+            elif nmbr == 10:
+                color = mellow_yellow
+                effect = 'pdl_swft'
+            elif nmbr == 11:
+                color = voila_violet
+                effect = 'pdl_slg'
+            elif nmbr == 12:
+                color = rad_pink
+                effect = 'bll_flckr'
+            brick = (row * (brick_height + 1), offset + i * (brick_width + 1), color, effect)
+            bricks.append(brick)
 
 
 def draw_bricks():
     for b in bricks:
         x = b[1]
         y = b[0]
-        pygame.draw.rect(screen, white, (x, y, brick_width, brick_height))
+        pygame.draw.rect(screen, b[2], (x, y, brick_width, brick_height))
 
 
 populate_bricks()

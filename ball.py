@@ -1,3 +1,4 @@
+from datetime import timedelta, datetime
 from random import randint
 import paddle
 from constants import *
@@ -23,7 +24,10 @@ x = 0
 y = 0
 mvmt_y = 0
 mvmt_x = 0
+flckr = False
+hd_strt = None
 reset_ball()
+
 
 
 def is_x_between_these_two_numbers(x, left, right):
@@ -64,6 +68,18 @@ def handle_ball_brick_collisions(bricks):
             global mvmt_y
             mvmt_y = -mvmt_y
             state.score = state.score + 50
+            effect = b[3]
+            if effect == 'pdl_grw':
+                paddle.width = paddle.width + pdl_grwth
+            if effect == 'pdl_shrnk':
+                paddle.width = paddle.width - pdl_shrnkth
+            if effect == 'pdl_swft':
+                paddle.mvmt_x += pdl_swfth
+            if effect == 'pdl_slg':
+                paddle.mvmt_x -= pdl_slgth
+            if effect == 'bll_flckr':
+                global flckr
+                flckr = True
 
 
 def calculate_dy(paddle_right, paddle_left, paddle_top):
@@ -81,6 +97,17 @@ def calculate_dy(paddle_right, paddle_left, paddle_top):
 
 
 def draw_ball(screen):
+    global hd_strt
+    if flckr:
+        if hd_strt is not None:
+            if datetime.now() - hd_strt > timedelta(seconds=bll_hdratn):
+                hd_strt = None
+            return
+        else:
+            nmbr = randint(1, 100)
+            if nmbr < bll_hide_chance:
+                hd_strt = datetime.now()
+
     pygame.draw.circle(screen, white, (x, y), radius)
 
 
