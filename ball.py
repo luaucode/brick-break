@@ -24,10 +24,9 @@ x = 0
 y = 0
 mvmt_y = 0
 mvmt_x = 0
-flckr = False
+flckr = None
 hd_strt = None
 reset_ball()
-
 
 
 def is_x_between_these_two_numbers(x, left, right):
@@ -58,6 +57,15 @@ def handle_ball_paddle_collisions(paddle_top, paddle_left, paddle_right, left_do
             mvmt_x += 1
 
 
+def update_flckr():
+    global flckr
+    if flckr is None:
+        return
+    curtime = datetime.now()
+    if curtime - flckr > timedelta(seconds=flckr_time):
+        flckr = None
+
+
 def handle_ball_brick_collisions(bricks):
     for b in bricks:
         bx = b[1]
@@ -79,7 +87,7 @@ def handle_ball_brick_collisions(bricks):
                 paddle.mvmt_x -= pdl_slgth
             if effect == 'bll_flckr':
                 global flckr
-                flckr = True
+                flckr = datetime.now()
 
 
 def calculate_dy(paddle_right, paddle_left, paddle_top):

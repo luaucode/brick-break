@@ -14,7 +14,7 @@ from ball import (
     handle_ball_wall_collisions,
     handle_ball_paddle_collisions,
     handle_ball_brick_collisions,
-    draw_ball)
+    draw_ball, update_flckr)
 from constants import *
 from paddle import *
 from sfx import play_sfx
@@ -104,6 +104,7 @@ while state.lives > 0:
     paddle_left = move_paddle(offset, left_down, right_down,
                               ball_x - ball_radius, ball_y - ball_radius,
                               ball_x + ball_radius, ball_y + ball_radius)
+    update_flckr()
 
 
     # Drawing
@@ -113,6 +114,7 @@ while state.lives > 0:
     draw_ball(screen)
     render_text(screen, f'Score: {state.score}', score_pos)
     render_text(screen, f'Lives: {state.lives}', lives_pos)
+    render_text (screen, state.debug, debug_pos)
 
     pygame.display.update()
     clock.tick(90)
